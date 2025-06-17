@@ -1,0 +1,369 @@
+Metadata-Version: 2.4
+Name: mcp-local
+Version: 1.0.0
+Summary: A comprehensive MCP server for local file management and system operations
+Home-page: https://github.com/asmaa/mcp-file-manager
+Author: Asmaa
+Author-email: Your Name <your.email@example.com>
+Project-URL: Homepage, https://github.com/yourusername/mcp-local
+Project-URL: Documentation, https://github.com/yourusername/mcp-local/docs
+Project-URL: Repository, https://github.com/yourusername/mcp-local
+Project-URL: Issues, https://github.com/yourusername/mcp-local/issues
+Keywords: mcp,local,file-manager,model-context-protocol
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: mcp>=1.0.0
+Requires-Dist: fastmcp>=0.2.0
+Requires-Dist: psutil>=5.9.0
+Requires-Dist: pathlib>=1.0.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Requires-Dist: flake8>=6.0.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+Dynamic: author
+Dynamic: home-page
+Dynamic: requires-python
+
+# MCP Local
+
+A comprehensive Model Context Protocol (MCP) server for advanced local file management and system operations.
+
+## Features
+
+### 🗂️ File Operations
+- **Read/Write Files**: Full support for text file operations with encoding handling
+- **List Directories**: Browse filesystem with size information and hidden file support
+- **File Information**: Detailed metadata including permissions, timestamps, and size
+- **Path Validation**: Robust path handling with security checks
+
+### ✏️ Advanced File Editing
+- **Line-based Editing**: Edit, insert, or delete specific lines in files
+- **Find & Replace**: Text replacement with regex support
+- **Diff Viewing**: Compare current files with backups
+- **Edit History**: Track all file modifications with detailed logs
+
+### 🔍 Search Capabilities
+- **Advanced Search**: VSCode-like search across multiple files
+- **File Type Filtering**: Search by extension groups (code, web, config, etc.)
+- **Pattern Matching**: Support for wildcards and regex
+- **Context Display**: Show surrounding lines for search results
+
+### 🔄 Backup & History
+- **Automatic Backups**: Files are backed up before modifications
+- **Edit Tracking**: Complete history of all file operations
+- **Restoration**: Easy restore from backups
+- **History Analysis**: Statistics and insights on editing patterns
+
+### 🛡️ Security & Safety
+- **Path Validation**: Prevents directory traversal attacks
+- **File Size Limits**: Configurable limits to prevent memory issues
+- **Backup System**: Automatic backup before destructive operations
+- **Error Handling**: Comprehensive exception handling and logging
+
+## Quick Start
+
+### 1. Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/mcp-local.git
+cd mcp-local
+
+# Run the installation script (sets up venv and installs everything)
+./scripts/install.sh
+```
+
+### 2. Activation
+
+```bash
+# Activate the virtual environment
+source venv/bin/activate
+
+# Run the server
+mcp-local
+```
+
+### 3. Alternative Run Methods
+
+```bash
+# Using the run script (auto-activates venv)
+./scripts/run_server.py
+
+# Direct Python execution
+source venv/bin/activate
+python -m mcp_local.main
+```
+
+## Configuration
+
+### Claude Desktop Configuration
+
+Add to your Claude Desktop config file:
+
+```json
+{
+  "mcpServers": {
+    "mcp-local": {
+      "command": "/path/to/mcp-local/scripts/run_server.py",
+      "args": []
+    }
+  }
+}
+```
+
+### Environment Variables
+
+```bash
+# Optional: Set custom backup directory
+export MCP_BACKUP_DIR="/path/to/backups"
+
+# Optional: Set maximum file size (default: 1MB)
+export MCP_MAX_FILE_SIZE="5242880"
+```
+
+## Usage Examples
+
+### Basic File Operations
+
+```python
+# List files in directory
+list_files("/path/to/directory", show_hidden=True)
+
+# Read file contents
+read_file("/path/to/file.txt")
+
+# Write content to file
+write_file("/path/to/file.txt", "Hello, world!")
+
+# Get file information
+get_file_info("/path/to/file.txt")
+```
+
+### Advanced Editing
+
+```python
+# Edit specific lines
+edit_file_lines("/path/to/file.txt", start_line=10, end_line=15, 
+                new_content="New content for lines 10-15")
+
+# Insert new lines
+insert_lines("/path/to/file.txt", line_number=5, 
+             content="This will be inserted at line 5")
+
+# Delete lines
+delete_lines("/path/to/file.txt", start_line=20, end_line=25)
+
+# Find and replace
+replace_in_file("/path/to/file.txt", search_pattern="old text", 
+                replace_with="new text", use_regex=False)
+```
+
+### History and Backups
+
+```python
+# View edit history
+get_edit_history(limit=20)
+
+# View history for specific file
+get_edit_history(limit=10, file_path="/path/to/file.txt")
+
+# Compare with backup
+get_file_diff("/path/to/file.txt")
+```
+
+## Architecture
+
+### Project Structure
+
+```
+mcp-local/
+├── 📁 venv/                        # Virtual environment
+├── 📁 src/mcp_local/               # Main package
+│   ├── 📁 core/                    # Core utilities & config
+│   │   ├── base.py                 # Abstract base classes
+│   │   ├── config.py               # Configuration constants
+│   │   ├── exceptions.py           # Custom exceptions  
+│   │   └── utils.py                # Helper functions
+│   ├── 📁 services/                # Business logic layer
+│   │   ├── backup_service.py       # Backup management
+│   │   ├── file_service.py         # File operations
+│   │   └── history_service.py      # Edit history tracking
+│   ├── 📁 tools/                   # MCP tool implementations
+│   │   ├── file_operations.py      # Basic file tools
+│   │   └── file_editing.py         # Advanced editing tools
+│   ├── main.py                     # Entry point
+│   └── server.py                   # Server configuration
+├── 📁 tests/                       # Test suite with pytest
+├── 📁 scripts/                     # Installation & run scripts
+│   ├── install.sh                  # Setup script with venv
+│   └── run_server.py               # Run with venv activation
+├── requirements.txt                # Dependencies
+├── pyproject.toml                  # Modern Python packaging
+├── README.md                       # This file
+└── .gitignore                      # Git ignore rules
+```
+
+### Virtual Environment Benefits
+
+1. **Isolated Dependencies**: No conflicts with system packages
+2. **Reproducible Environment**: Consistent across different machines
+3. **Easy Management**: Simple activation/deactivation
+4. **Clean Installation**: Can be easily removed by deleting `venv/` folder
+
+## Development
+
+### Setting up Development Environment
+
+```bash
+# Clone and setup
+git clone https://github.com/yourusername/mcp-local.git
+cd mcp-local
+
+# Install with development dependencies
+./scripts/install.sh
+
+# Activate environment
+source venv/bin/activate
+```
+
+### Running Tests
+
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=src/mcp_local --cov-report=html
+
+# Run specific test file
+pytest tests/test_file_operations.py
+```
+
+### Code Quality
+
+```bash
+# Activate virtual environment first
+source venv/bin/activate
+
+# Format code
+black src/ tests/
+
+# Sort imports
+isort src/ tests/
+
+# Lint code
+flake8 src/ tests/
+
+# Type checking
+mypy src/
+```
+
+### Virtual Environment Commands
+
+```bash
+# Activate
+source venv/bin/activate
+
+# Deactivate
+deactivate
+
+# Recreate environment
+rm -rf venv
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+
+# Install new package
+source venv/bin/activate
+pip install package_name
+pip freeze > requirements.txt  # Update requirements
+```
+
+## Backup System
+
+MCP Local automatically creates backups in `~/.mcp_local_backups/` before any destructive file operations. This ensures you can always recover previous versions of your files.
+
+## Security Features
+
+- **Path Validation**: Prevents directory traversal attacks
+- **Size Limits**: Configurable file size limits
+- **Safe Commands**: Restricted command execution
+- **Automatic Backups**: Files backed up before modification
+
+## Troubleshooting
+
+### Virtual Environment Issues
+
+```bash
+# If venv activation fails
+rm -rf venv
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+
+# If import errors occur
+source venv/bin/activate
+pip install -e .
+
+# Check if package is installed
+pip list | grep mcp-local
+```
+
+### Common Issues
+
+1. **"Module not found" error**: Make sure venv is activated and package is installed
+2. **Permission errors**: Check file permissions and ownership
+3. **Python version**: Ensure Python 3.8+ is installed
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Set up development environment (`./scripts/install.sh`)
+4. Make your changes and add tests
+5. Run the test suite (`source venv/bin/activate && pytest`)
+6. Format your code (`black src/ tests/ && isort src/ tests/`)
+7. Commit your changes (`git commit -m 'Add amazing feature'`)
+8. Push to the branch (`git push origin feature/amazing-feature`)
+9. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+- 📖 [Documentation](docs/)
+- 🐛 [Issue Tracker](https://github.com/yourusername/mcp-local/issues)
+- 💬 [Discussions](https://github.com/yourusername/mcp-local/discussions)
+
+## Changelog
+
+### v1.0.0
+- Initial release with virtual environment support
+- Renamed package to `mcp_local` for clarity
+- Basic file operations (read, write, list)
+- Advanced file editing (line-based operations)
+- Automatic backup system with isolated storage
+- Edit history tracking
+- Comprehensive error handling
+- Full test coverage
+- Professional package structure with venv support

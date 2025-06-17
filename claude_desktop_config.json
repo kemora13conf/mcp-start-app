@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "my-local-server": {
-      "command": "/Users/asmaaasmaa/Desktop/Python/mcp/venv/bin/python",
-      "args": ["/Users/asmaaasmaa/Desktop/Python/mcp/app.py"],
-      "env": {}
-    }
-  }
-}
