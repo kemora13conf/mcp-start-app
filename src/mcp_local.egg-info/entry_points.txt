@@ -1,0 +1,2 @@
+[console_scripts]
+mcp-local = mcp_local.main:main
